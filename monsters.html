@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>D&D Monsters</title>
+    <style>
+      h1 {
+        background-color: red;
+        color: black;
+        text-align: center;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: black;
+      }
+
+      summary {
+        color: red;
+        font-size: 20px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      li {
+        cursor: pointer;
+        margin: 4px 0;
+        width: fit-content;
+        color: red;
+      }
+
+      li:hover {
+        color: darkred;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>D&D 5e Monsters</h1>
+    <div id="monsterList"></div>
+
+    <script>
+      fetch("https://www.dnd5eapi.co/api/2014/monsters")
+        .then((response) => response.json())
+        .then((data) => {
+          const container = document.getElementById("monsterList");
+
+          const grouped = {};
+
+          data.results.forEach((monster) => {
+            const letter = monster.name[0].toUpperCase();
+            if (!grouped[letter]) {
+              grouped[letter] = [];
+            }
+            grouped[letter].push(monster);
+          });
+
+          Object.keys(grouped)
+            .sort()
+            .forEach((letter) => {
+              const details = document.createElement("details");
+              const summary = document.createElement("summary");
+              const ul = document.createElement("ul");
+
+              summary.textContent = letter;
+              details.appendChild(summary);
+
+              grouped[letter].forEach((monster) => {
+                const li = document.createElement("li");
+                li.textContent = monster.name;
+                li.onclick = () => loadMonster(monster.index);
+                ul.appendChild(li);
+              });
+
+              details.appendChild(ul);
+              container.appendChild(details);
+            });
+        });
+
+      function loadMonster(index) {
+        fetch(`https://www.dnd5eapi.co/api/2014/monsters/${index}`)
+          .then((response) => response.json())
+          .then((monster) => {
+            alert(
+              `${monster.name}\n` +
+                `HP: ${monster.hit_points}\n` +
+                `AC: ${monster.armor_class[0].value}`
+            );
+          });
+      }
+    </script>
+  </body>
+</html>
