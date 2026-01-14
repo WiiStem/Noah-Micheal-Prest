@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>D&D Magic Items</title>
+    <style>
+      h1 {
+        background-color: red;
+        color: black;
+        text-align: center;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: black;
+      }
+
+      summary {
+        color: red;
+        font-size: 20px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      li {
+        cursor: pointer;
+        margin: 4px 0;
+        width: fit-content;
+        color: red;
+      }
+
+      li:hover {
+        color: darkred;
+      }
+
+      .button {
+        background-color: red;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: monospace;
+        color: white;
+        padding: 20px;
+        margin-left: 10px;
+        text-align: center;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>D&D 5e Magic Items</h1>
+    <a href="index.html"><button class="button">Home</button></a>
+
+    <div id="itemList"></div>
+
+    <script>
+      fetch("https://www.dnd5eapi.co/api/2014/magic-items")
+        .then((response) => response.json())
+        .then((data) => {
+          const container = document.getElementById("itemList");
+          const grouped = {};
+
+          data.results.forEach((item) => {
+            const letter = item.name[0].toUpperCase();
+            if (!grouped[letter]) {
+              grouped[letter] = [];
+            }
+            grouped[letter].push(item);
+          });
+
+          Object.keys(grouped)
+            .sort()
+            .forEach((letter) => {
+              const details = document.createElement("details");
+              const summary = document.createElement("summary");
+              const ul = document.createElement("ul");
+
+              summary.textContent = letter;
+              details.appendChild(summary);
+
+              grouped[letter].forEach((item) => {
+                const li = document.createElement("li");
+                li.textContent = item.name;
+                li.onclick = () => loadMagicItem(item.index);
+                ul.appendChild(li);
+              });
+
+              details.appendChild(ul);
+              container.appendChild(details);
+            });
+        });
+
+      function loadMagicItem(index) {
+        fetch(`https://www.dnd5eapi.co/api/2014/magic-items/${index}`)
+          .then((response) => response.json())
+          .then((item) => {
+            alert(
+              `${item.name}\n\n` +
+                `Rarity: ${item.rarity?.name || "Unknown"}\n` +
+                `Attunement: ${item.attunement ? "Yes" : "No"}\n\n` +
+                `${item.desc?.join("\n\n") || "No description available."}`
+            );
+          });
+      }
+    </script>
+  </body>
+</html>

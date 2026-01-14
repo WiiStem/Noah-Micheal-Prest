@@ -22,7 +22,7 @@
       li:hover {
         color: darkred;
       }
-      #racesList {
+      #skillsList {
         color: red;
       }
       .button {
@@ -41,30 +41,30 @@
   </head>
   <body>
     <div>
-      <h1>D&D 5e Races</h1>
+      <h1>D&D 5e Skills</h1>
       <a href="index.html"><button class="button">Home</button></a>
-      <ul id="racesList"></ul>
+      <ul id="skillsList"></ul>
     </div>
     <script>
-      fetch("https://www.dnd5eapi.co/api/2014/races")
+      fetch("https://www.dnd5eapi.co/api/2014/skills")
         .then((response) => response.json())
         .then((data) => {
-          const list = document.getElementById("racesList");
+          const list = document.getElementById("skillsList");
 
-          data.results.forEach((race) => {
+          data.results.forEach((skills) => {
             const li = document.createElement("li");
-            li.textContent = race.name;
+            li.textContent = skills.name;
 
-            li.onclick = () => loadRace(race.index);
+            li.onclick = () => loadSkills(skills.index);
             list.appendChild(li);
           });
         });
 
-      function loadRace(index) {
-        fetch(`https://www.dnd5eapi.co/api/2014/races/${index}`)
+      function loadSkills(index) {
+        fetch(`https://www.dnd5eapi.co/api/2014/skills/${index}`)
           .then((response) => response.json())
-          .then((race) => {
-            alert(`Name: ${race.name}\n``\nDescription: ${race.desc}`);
+          .then((skills) => {
+            alert(`Name: ${skills.name}\n` + `\nDescription: ${skills.desc}`);
           });
       }
     </script>

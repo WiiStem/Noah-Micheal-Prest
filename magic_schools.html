@@ -22,7 +22,7 @@
       li:hover {
         color: darkred;
       }
-      #racesList {
+      #schoolList {
         color: red;
       }
       .button {
@@ -41,30 +41,30 @@
   </head>
   <body>
     <div>
-      <h1>D&D 5e Races</h1>
+      <h1>D&D 5e Magic Schools</h1>
       <a href="index.html"><button class="button">Home</button></a>
-      <ul id="racesList"></ul>
+      <ul id="schoolList"></ul>
     </div>
     <script>
-      fetch("https://www.dnd5eapi.co/api/2014/races")
+      fetch("https://www.dnd5eapi.co/api/2014/magic-schools")
         .then((response) => response.json())
         .then((data) => {
-          const list = document.getElementById("racesList");
+          const list = document.getElementById("schoolList");
 
-          data.results.forEach((race) => {
+          data.results.forEach((schools) => {
             const li = document.createElement("li");
-            li.textContent = race.name;
+            li.textContent = schools.name;
 
-            li.onclick = () => loadRace(race.index);
+            li.onclick = () => loadSchools(schools.index);
             list.appendChild(li);
           });
         });
 
-      function loadRace(index) {
-        fetch(`https://www.dnd5eapi.co/api/2014/races/${index}`)
+      function loadSchools(index) {
+        fetch(`https://www.dnd5eapi.co/api/2014/magic-schools/${index}`)
           .then((response) => response.json())
-          .then((race) => {
-            alert(`Name: ${race.name}\n``\nDescription: ${race.desc}`);
+          .then((schools) => {
+            alert(`Name: ${schools.name}\n` + `\nDescription: ${schools.desc}`);
           });
       }
     </script>
